@@ -1,0 +1,105 @@
+# =============================================================================
+# tappi_profili.yaml
+# =============================================================================
+# Un profilo per ciascun tipo di tappo. Il campo TAPPO_TYPE nel config
+# principale (config_base.yaml / DB, tabella `configurazione`) seleziona
+# quale profilo qui sotto viene caricato all'avvio del programma.
+#
+# Ogni profilo contiene TUTTO ciò che serve per quel tipo di tappo:
+#   - quale modello di anomaly detection caricare
+#   - quale metodo di rotazione usare (deve esistere in src/rotation_registry.py)
+#   - eventuali parametri specifici di quel metodo (ROTATION_PARAMS)
+#   - la ROI del tappo nel frame (cambia da tappo a tappo!)
+#   - la soglia di rigetto
+#
+# Aggiungere un nuovo tipo di tappo = aggiungere un nuovo blocco qui sotto
+# (+ eventualmente un nuovo metodo in rotation_registry.py se serve un
+# algoritmo di rotazione nuovo). main.py NON va toccato.
+# =============================================================================
+
+tappo_rosso:
+  descrizione: "Tappo rosso piccolo, rilevamento fessura via slot-detection su grigio"
+  MODEL_PATH: "model/tappo_rosso/full_set/torch/weights/torch/model.pt"
+  DEVICE: "cpu"                     # opzionale: se assente, usa DEVICE globale di config_base.yaml
+
+  ROTATION_METHOD: "slot_detection"
+  ROTATION_PARAMS:
+    TARGET_ANGLE: 180.0
+    CAP_THRESHOLD: 10
+    SLOT_VAL_MAX: 30
+    SEARCH_RADIUS_FACTOR: 1.15
+    SLOT_AREA_MIN: 30000
+    SLOT_AREA_MAX: 140000
+    SLOT_ELONG_MIN: 3.0
+    SLOT_ELONG_MAX: 6.5
+    SLOT_DIST_RATIO_MIN: 0.65
+    SLOT_DIST_RATIO_MAX: 0.87
+
+  TAPPO_Y1: 610
+  TAPPO_Y2: 1500
+  TAPPO_X1: 350
+  TAPPO_X2: 700
+
+  SOGLIA_TAPPO: 0.4
+  PERCENTILE_TAPPO: 98    # percentile usato su compute_cap_score (score = percentile N-esimo dell'anomaly map nella ROI)
+
+tappo_trasparente_grande:
+  descrizione: "Tappo trasparente grande, allineamento via template matching"
+  MODEL_PATH: "model/tappo_trasparente_grande/full_set/torch/weights/torch/model.pt" #ANCHE MODELLO trasparente_grande_new VA BENE
+  DEVICE: "cpu"
+
+  ROTATION_METHOD: "template_matching"
+  TEMPLATE_PATH: "orientation/template_matching.jpg"
+  ROTATION_PARAMS: {}   # align_cap_image non ha parametri tunable esposti al momento
+
+  TAPPO_Y1: 310
+  TAPPO_Y2: 1700
+  TAPPO_X1: 350
+  TAPPO_X2: 800
+
+  SOGLIA_TAPPO: 0.19
+  PERCENTILE_TAPPO: 99 # 99 CON 0.19 DI SOGLIA PER MODELLO IN TRASPARENTE GRANDE TRASPARENTE GRANDE NEW # ROI più piccola/uniforme di tappo_rosso: percentile più alto, più selettivo su hot-pixel isolati
+
+# ---------------------------------------------------------------------------
+# TODO: i due profili sotto sono PLACEHOLDER. Vanno completati quando avrai
+# il metodo di rotazione dei rispettivi tappi: aggiungi la funzione in
+# src/rotation_registry.py, registrala in ROTATION_REGISTRY con una chiave
+# (es. "pca_alignment"), e usa quella chiave qui sotto in ROTATION_METHOD.
+# Finché ROTATION_METHOD punta a un metodo non registrato, main.py si
+# fermerà con un errore chiaro all'avvio (fail-fast, niente sorprese
+# silenziose in produzione).
+# ---------------------------------------------------------------------------
+
+tappo_trasparente_piccolo:
+  descrizione: "Tappo trasparente piccolo, allineamento via template matching"
+  MODEL_PATH: "tappo_trasparente_piccolo/full_set/torch/weights/torch/model.pt"
+  DEVICE: "cpu"
+
+  ROTATION_METHOD: "template_matching_small"
+  TEMPLATE_PATH: "orientation/template_matching_small.jpg"
+  ROTATION_PARAMS: {}
+  #ANCORA DA VALUTARE NON HO ESEMPI NEGATIVI
+
+  TAPPO_Y1: 440
+  TAPPO_Y2: 1650
+  TAPPO_X1: 430
+  TAPPO_X2: 800
+
+  SOGLIA_TAPPO: 0.65
+  PERCENTILE_TAPPO: 90    # TODO: ricalibrare quando pronto il modello
+
+tappo_tipo_4:
+  descrizione: "TODO — completare quando pronto il metodo di rotazione"
+  MODEL_PATH: "risultati/tappo_tipo_4/torch/weights/torch/model.pt"
+  DEVICE: "cpu"
+
+  ROTATION_METHOD: "TODO_non_ancora_implementato"
+  ROTATION_PARAMS: {}
+
+  TAPPO_Y1: 0
+  TAPPO_Y2: 0
+  TAPPO_X1: 0
+  TAPPO_X2: 0
+
+  SOGLIA_TAPPO: 0.65
+  PERCENTILE_TAPPO: 80    # TODO: ricalibrare quando pronto il modello

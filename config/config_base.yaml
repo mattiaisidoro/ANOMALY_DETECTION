@@ -1,0 +1,27 @@
+BUFFER_DIR:
+  valore: "buffer_telecamera"
+  descrizione: "Cartella di origine per le immagini catturate dalla telecamera"
+
+OUTPUT_DIR:
+  valore: "risultati_linea"
+  descrizione: "Cartella di destinazione per i risultati dell'elaborazione"
+
+DEVICE:
+  valore: "cpu"
+  descrizione: "Hardware utilizzato per l'inferenza (cpu o cuda). Usato come default se il profilo del tappo non lo sovrascrive."
+
+TAPPO_TYPE:
+  valore: "tappo_rosso"
+  descrizione: "Tipo di tappo attivo sulla linea. Deve corrispondere a una chiave in config/tappi_profili.yaml. Determina modello, ROI e metodo di rotazione usati. Letto una sola volta all'avvio: per cambiare tappo, aggiornare questo valore e riavviare il processo."
+
+OVERLAY_ORIGINALE:
+  valore: "0.7"
+  descrizione: "Opacità dell'immagine originale nella visualizzazione di output"
+
+OVERLAY_HEATMAP:
+  valore: "0.3"
+  descrizione: "Opacità della mappa di calore sovrimpressa"
+
+PAUSA_BUFFER_VUOTO:
+  valore: "0.05"
+  descrizione: "Secondi di attesa se il buffer è vuoto per risparmio risorse"

@@ -1,0 +1,9 @@
+*.bin
+*.ckpt
+*.pt
+old_result
+Dataset
+dataset_*
+giacobazzi.db
+code_*
+CODE*
