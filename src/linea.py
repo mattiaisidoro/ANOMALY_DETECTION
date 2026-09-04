@@ -31,8 +31,8 @@ def main():
         shutil.copy(foto_originale, destinazione)
         print(f"SCATTO [CAM] {indice}/{len(lista_foto)}: {nome_file} inviato al buffer")
 
-        #simulo attesa nastro di 0.5 secondi
-        time.sleep(0.5)
+        #simulo attesa nastro di 1 secondo
+        time.sleep(1)
        
 
     print("FOTO ESAURITE")
